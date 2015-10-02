@@ -13,7 +13,7 @@ s = WEBrick::HTTPServer.new(
 
 s.mount_proc("/db") { |req, res|
   grade = req.query['grade']
-  if grade
+  if grade && grade != ""
     sql = "SELECT * FROM students WHERE grade = #{grade}"
   else
     sql = "SELECT * FROM students"
@@ -21,7 +21,7 @@ s.mount_proc("/db") { |req, res|
   File.open("sample.header.html") do |file|
     res.body += file.read
   end
-  res.body += sql
+  res.body += "<p>#{sql}</p>"
   db.execute(sql) do |row|
     res.body += "<tr>"
     res.body += "<td>#{row[0]}</td>"
